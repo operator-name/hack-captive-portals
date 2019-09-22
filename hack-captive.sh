@@ -21,9 +21,9 @@
 # =========================================================================== #
 
 # Find the initial parameters of wireless interface.
-interface="$(ip -o -4 route show to default | awk '/dev/ {print $5}')"
+interface="$(ip -o -4 route show to default | awk '/dev/ {print $5}' | uniq)"
 localip="$(ip -o -4 route get 1 | awk '/src/ {print $7}')"
-wifissid="$(iw dev "$interface" link | awk '/SSID/ {print $NF}')"
+wifissid="$(iw dev "$interface" link | awk '/SSID/ {for (i = 2; i<NF; i++) printf $i " "; print $NF}')"
 gateway="$(ip -o -4 route show to default | awk '/via/ {print $3}')"
 broadcast="$(ip -o -4 addr show dev "$interface" | awk '/brd/ {print $6}')"
 ipmask="$(ip -o -4 addr show dev "$interface" | awk '/inet/ {print $4}')"
